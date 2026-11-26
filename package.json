@@ -1,0 +1,93 @@
+{
+  "name": "reel-desktop",
+  "version": "0.2.1",
+  "private": true,
+  "description": "A standalone player for your ISP media collection",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "node server.cjs",
+    "test": "node --test",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac --arm64 --x64 --publish never --config.directories.output=dist/macos",
+    "dist:win": "electron-builder --win --x64 --publish never --config.directories.output=dist/windows",
+    "icons": "node scripts/generate-icon.cjs",
+    "dist:linux": "electron-builder --linux --x64 --publish never --config.directories.output=dist/linux"
+  },
+  "dependencies": {
+    "basic-ftp": "^6.2.4",
+    "cheerio": "^1.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "electron": "^42.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "app.reel.desktop",
+    "productName": "Reel",
+    "files": [
+      "desktop/**",
+      "src/**",
+      "server.cjs",
+      "media.cjs",
+      "package.json",
+      "http-media.cjs"
+    ],
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.png",
+      "category": "public.app-category.entertainment",
+      "identity": "-",
+      "notarize": false,
+      "extendInfo": {
+        "NSLocalNetworkUsageDescription": "Reel connects to the media servers you add on your ISP or home Wi-Fi network."
+      }
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png",
+      "signExecutable": false
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "category": "AudioVideo",
+      "synopsis": "Stream your ISP media collection",
+      "syncDesktopName": true
+    },
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "artifactName": "Reel-${version}-${os}-${arch}.${ext}",
+    "dmg": {
+      "title": "Reel ${version}",
+      "contents": [
+        {
+          "x": 140,
+          "y": 200
+        },
+        {
+          "x": 420,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Reel",
+      "deleteAppDataOnUninstall": false
+    }
+  },
+  "author": "Reel",
+  "desktopName": "reel.desktop"
+}
